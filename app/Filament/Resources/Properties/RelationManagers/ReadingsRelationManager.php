@@ -2,16 +2,21 @@
 
 namespace App\Filament\Resources\Properties\RelationManagers;
 
+use Filament\Actions;
 use Filament\Forms;
-use Filament\Schemas\Schema;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Actions;
 
 class ReadingsRelationManager extends RelationManager
 {
     protected static string $relationship = 'readings';
+
+    public static function canViewForRecord($ownerRecord, string $pageClass): bool
+    {
+        return auth()->user()?->can('view_reading', \App\Models\MeterReading::class) ?? false;
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -54,15 +59,19 @@ class ReadingsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Actions\CreateAction::make(),
+                Actions\CreateAction::make()
+                    ->authorize(fn () => auth()->user()?->can('create_reading', \App\Models\MeterReading::class)),
             ])
             ->actions([
-                Actions\EditAction::make(),
-                Actions\DeleteAction::make(),
+                Actions\EditAction::make()
+                    ->authorize(fn ($record) => auth()->user()?->can('update_reading', $record)),
+                Actions\DeleteAction::make()
+                    ->authorize(fn ($record) => auth()->user()?->can('delete_reading', $record)),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->authorize(fn () => auth()->user()?->can('delete_reading', \App\Models\MeterReading::class)),
                 ]),
             ]);
     }
