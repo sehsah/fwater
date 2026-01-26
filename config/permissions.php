@@ -29,5 +29,9 @@ return [
         'create_reading',
         'update_reading',
         'delete_reading',
+        'view_user',
+        'create_user',
+        'update_user',
+        'delete_user',
     ],
 ];
