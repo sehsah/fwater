@@ -30,6 +30,7 @@ class RolesTable
             ->filters([
                 //
             ])
+            ->recordUrl(fn ($record): string => \App\Filament\Resources\Roles\RoleResource::getUrl('edit', ['record' => $record]))
             ->recordActions([
                 EditAction::make(),
             ])

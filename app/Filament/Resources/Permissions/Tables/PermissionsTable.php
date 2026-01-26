@@ -30,6 +30,7 @@ class PermissionsTable
             ->filters([
                 //
             ])
+            ->recordUrl(fn ($record): string => \App\Filament\Resources\Permissions\PermissionResource::getUrl('edit', ['record' => $record]))
             ->recordActions([
                 EditAction::make(),
             ])

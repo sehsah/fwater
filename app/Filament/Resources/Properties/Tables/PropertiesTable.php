@@ -37,6 +37,7 @@ class PropertiesTable
             ->filters([
                 //
             ])
+            ->recordUrl(fn ($record): string => \App\Filament\Resources\Properties\PropertyResource::getUrl('view', ['record' => $record]))
             ->recordActions([
                 EditAction::make(),
             ])

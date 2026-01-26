@@ -41,6 +41,7 @@ class UsersTable
             ->filters([
                 //
             ])
+            ->recordUrl(fn ($record): string => \App\Filament\Resources\Users\UserResource::getUrl('edit', ['record' => $record]))
             ->recordActions([
                 EditAction::make(),
             ])
