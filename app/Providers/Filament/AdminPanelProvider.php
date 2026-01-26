@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->resources([
                 \App\Filament\Resources\Properties\PropertyResource::class,
+                \App\Filament\Resources\Users\UserResource::class,
                 \App\Filament\Resources\Roles\RoleResource::class,
                 \App\Filament\Resources\Permissions\PermissionResource::class,
             ])
