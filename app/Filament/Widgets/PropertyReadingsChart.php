@@ -8,6 +8,8 @@ class PropertyReadingsChart extends ChartWidget
 {
     protected ?string $heading = 'Property Readings Chart';
 
+    protected int|string|array $columnSpan = 'full';
+
     protected function getData(): array
     {
         $properties = \App\Models\Property::with('readings')->get();

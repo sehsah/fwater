@@ -21,8 +21,18 @@ class Property extends Model
         'water_number',
     ];
 
+    protected $casts = [
+        'electricity_number' => 'array',
+        'water_number' => 'array',
+    ];
+
     public function readings(): HasMany
     {
         return $this->hasMany(MeterReading::class);
+    }
+
+    public function units(): HasMany
+    {
+        return $this->hasMany(Unit::class);
     }
 }
