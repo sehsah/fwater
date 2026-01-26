@@ -22,8 +22,7 @@ class PropertyForm
                         'Villa' => 'Villa',
                         'Apartment' => 'Apartment',
                         'Building' => 'Building',
-                        'Duplex' => 'Duplex',
-                        'Studio' => 'Studio',
+                        'Compound' => 'Compound',
                     ])
                     ->live()
                     ->required(),
@@ -33,27 +32,8 @@ class PropertyForm
                         TextInput::make('name')
                             ->label('Unit Name/Number')
                             ->required(),
-                        Select::make('type')
-                            ->label('Type')
-                            ->options([
-                                'residential' => 'Residential',
-                                'commercial' => 'Commercial',
-                                'industrial' => 'Industrial',
-                                'agricultural' => 'Agricultural',
-                                'other' => 'Other',
-                            ]),
-                        TextInput::make('number_of_conditioning')
-                            ->label('Number of Conditioning')
-                            ->numeric()
-                            ->required(),
-                        TextInput::make('number_of_people')
-                            ->label('Number of People')
-                            ->numeric()
-                            ->required(),
-                        TextInput::make('number_of_rooms')
-                            ->label('Number of Rooms')
-                            ->numeric()
-                            ->required(),
+                        TextInput::make('type')
+                            ->label('Type (e.g. 2BHK)'),
                         Select::make('is_occupied')
                             ->label('Status')
                             ->options([
@@ -73,16 +53,16 @@ class PropertyForm
                     ->maxLength(255),
                 Repeater::make('electricity_number')
                     ->label('Electricity Numbers')
-                    ->simple(
+                    ->schema([
                         TextInput::make('number')->required(),
-                    )
+                    ])
                     ->addActionLabel('Add Electricity Number')
                     ->columnSpanFull(),
                 Repeater::make('water_number')
                     ->label('Water Numbers')
-                    ->simple(
+                    ->schema([
                         TextInput::make('number')->required(),
-                    )
+                    ])
                     ->addActionLabel('Add Water Number')
                     ->columnSpanFull(),
             ]);

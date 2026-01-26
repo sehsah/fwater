@@ -20,6 +20,8 @@ class Unit extends Model
         'number_of_people',
         'number_of_rooms',
         'description',
+        'electricity_number',
+        'water_number',
     ];
 
     public function property(): BelongsTo
