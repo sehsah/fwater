@@ -25,6 +25,9 @@ return [
         'create_permission',
         'update_permission',
         'delete_permission',
+        'view_reading',
+        'create_reading',
+        'update_reading',
+        'delete_reading',
     ],
-
 ];

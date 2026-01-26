@@ -64,14 +64,14 @@ class PropertyForm
                 Repeater::make('electricity_number')
                     ->label('Electricity Numbers')
                     ->schema([
-                        TextInput::make('number')->required(),
+                        TextInput::make('number'),
                     ])
                     ->addActionLabel('Add Electricity Number')
                     ->columnSpanFull(),
                 Repeater::make('water_number')
                     ->label('Water Numbers')
                     ->schema([
-                        TextInput::make('number')->required(),
+                        TextInput::make('number'),
                     ])
                     ->addActionLabel('Add Water Number')
                     ->columnSpanFull(),

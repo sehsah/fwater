@@ -24,18 +24,7 @@ class PropertiesTable
                     ->sortable(),
                 TextColumn::make('location')
                     ->searchable(),
-                TextColumn::make('electricity_number')
-                    ->label('Elec #')
-                    ->badge()
-                    ->separator(',')
-                    ->formatStateUsing(fn ($state) => collect($state)->pluck('number')->join(', '))
-                    ->searchable(),
-                TextColumn::make('water_number')
-                    ->label('Water #')
-                    ->badge()
-                    ->separator(',')
-                    ->formatStateUsing(fn ($state) => collect($state)->pluck('number')->join(', '))
-                    ->searchable(),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
