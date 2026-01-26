@@ -41,6 +41,16 @@ class PropertyForm
                                 1 => 'Occupied',
                             ])
                             ->default(0),
+                        TextInput::make('number_of_conditioning')
+                            ->label('Number of Conditioning'),
+                        TextInput::make('number_of_people')
+                            ->label('Number of People'),
+                        TextInput::make('number_of_rooms')
+                            ->label('Number of Rooms'),
+                        TextInput::make('electricity_number')
+                            ->label('Electricity Number'),
+                        TextInput::make('water_number')
+                            ->label('Water Number'),
                         TextInput::make('description')
                             ->label('Notes'),
                     ])
