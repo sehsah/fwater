@@ -20,7 +20,11 @@ class PropertyPolicy
      */
     public function view(User $user, Property $property): bool
     {
-        return $user->can('view_property');
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+
+        return $user->can('view_property') && $property->users()->where('users.id', $user->id)->exists();
     }
 
     /**
@@ -36,7 +40,11 @@ class PropertyPolicy
      */
     public function update(User $user, Property $property): bool
     {
-        return $user->can('update_property');
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+
+        return $user->can('update_property') && $property->users()->where('users.id', $user->id)->exists();
     }
 
     /**
@@ -44,7 +52,11 @@ class PropertyPolicy
      */
     public function delete(User $user, Property $property): bool
     {
-        return $user->can('delete_property');
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+
+        return $user->can('delete_property') && $property->users()->where('users.id', $user->id)->exists();
     }
 
     /**

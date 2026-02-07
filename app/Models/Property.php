@@ -35,4 +35,9 @@ class Property extends Model
     {
         return $this->hasMany(Unit::class);
     }
+
+    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

@@ -15,12 +15,22 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class PropertyResource extends Resource
 {
     protected static ?string $model = Property::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->when(
+                ! auth()->user()?->hasRole('superadmin'),
+                fn (Builder $query) => $query->whereHas('users', fn (Builder $query) => $query->where('users.id', auth()->id()))
+            );
+    }
 
     public static function form(Schema $schema): Schema
     {

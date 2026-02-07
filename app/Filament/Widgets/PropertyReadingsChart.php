@@ -12,7 +12,13 @@ class PropertyReadingsChart extends ChartWidget
 
     protected function getData(): array
     {
-        $properties = \App\Models\Property::with('readings')->get();
+        $properties = \App\Models\Property::query()
+            ->when(
+                ! auth()->user()?->hasRole('superadmin'),
+                fn ($query) => $query->whereHas('users', fn ($query) => $query->where('users.id', auth()->id()))
+            )
+            ->with('readings')
+            ->get();
 
         $labels = $properties->pluck('name')->toArray();
 

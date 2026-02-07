@@ -20,7 +20,11 @@ class MeterReadingPolicy
      */
     public function view(User $user, MeterReading $meterReading): bool
     {
-        return $user->can('view_reading');
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+
+        return $user->can('view_reading') && $meterReading->property->users()->where('users.id', $user->id)->exists();
     }
 
     /**
@@ -36,7 +40,11 @@ class MeterReadingPolicy
      */
     public function update(User $user, MeterReading $meterReading): bool
     {
-        return $user->can('update_reading');
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+
+        return $user->can('update_reading') && $meterReading->property->users()->where('users.id', $user->id)->exists();
     }
 
     /**
@@ -44,7 +52,11 @@ class MeterReadingPolicy
      */
     public function delete(User $user, MeterReading $meterReading): bool
     {
-        return $user->can('delete_reading');
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+
+        return $user->can('delete_reading') && $meterReading->property->users()->where('users.id', $user->id)->exists();
     }
 
     /**

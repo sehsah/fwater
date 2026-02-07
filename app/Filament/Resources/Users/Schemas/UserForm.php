@@ -33,6 +33,11 @@ class UserForm
                     ->multiple()
                     ->preload()
                     ->searchable(),
+                Select::make('properties')
+                    ->relationship('properties', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable(),
                 DateTimePicker::make('email_verified_at'),
             ]);
     }
