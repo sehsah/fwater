@@ -24,7 +24,7 @@ class Property extends Model
         'location',
         'electricity_number',
         'water_number',
-        'electricity_rate',
+        'electric_rate',
         'water_rate',
     ];
 
