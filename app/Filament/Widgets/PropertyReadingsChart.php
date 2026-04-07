@@ -6,6 +6,8 @@ use Filament\Widgets\ChartWidget;
 
 class PropertyReadingsChart extends ChartWidget
 {
+    protected static bool $isDiscovered = false;
+
     protected ?string $heading = 'Property Readings Chart';
 
     protected int|string|array $columnSpan = 'full';
