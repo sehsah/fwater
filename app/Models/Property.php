@@ -24,6 +24,8 @@ class Property extends Model
         'location',
         'electricity_number',
         'water_number',
+        'electricity_rate',
+        'water_rate',
     ];
 
     protected $casts = [
