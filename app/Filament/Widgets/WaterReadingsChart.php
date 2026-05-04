@@ -11,8 +11,20 @@ class WaterReadingsChart extends ChartWidget
 
     protected int|string|array $columnSpan = 1;
 
+    protected function getFilters(): ?array
+    {
+        return [
+            'day' => 'Daily',
+            'week' => 'Weekly',
+            'month' => 'Monthly',
+            'year' => 'Yearly',
+        ];
+    }
+
     protected function getData(): array
     {
+        $period = $this->filter ?? 'month';
+        [$start, $end] = $this->resolveDateRange($period);
 
         $properties = Property::query()
             ->when(
@@ -21,7 +33,8 @@ class WaterReadingsChart extends ChartWidget
             )
             ->with([
                 'readings' => fn ($query) => $query
-                    ->where('type', 'water'),
+                    ->where('type', 'water')
+                    ->whereBetween('reading_date', [$start, $end]),
             ])
             ->get();
 
@@ -42,7 +55,7 @@ class WaterReadingsChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Water (Average)',
+                    'label' => 'Water (Average) gallons',
                     'data' => $data,
                     'backgroundColor' => '#3b82f6',
                 ],
@@ -54,5 +67,17 @@ class WaterReadingsChart extends ChartWidget
     protected function getType(): string
     {
         return 'bar';
+    }
+
+    private function resolveDateRange(string $period): array
+    {
+        $now = now();
+
+        return match ($period) {
+            'day' => [$now->copy()->startOfDay(), $now->copy()->endOfDay()],
+            'week' => [$now->copy()->startOfWeek(), $now->copy()->endOfWeek()],
+            'year' => [$now->copy()->startOfYear(), $now->copy()->endOfYear()],
+            default => [$now->copy()->startOfMonth(), $now->copy()->endOfMonth()],
+        };
     }
 }

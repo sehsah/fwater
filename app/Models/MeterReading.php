@@ -14,7 +14,9 @@ class MeterReading extends Model
     protected $fillable = [
         'property_id',
         'type',
+        'gauge',
         'value',
+        'notes',
         'reading_date',
     ];
 

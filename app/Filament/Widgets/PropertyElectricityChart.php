@@ -2,15 +2,19 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Property;
+use App\Models\MeterReading;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
-class ElectricityReadingsChart extends ChartWidget
+class PropertyElectricityChart extends ChartWidget
 {
+    protected static bool $isDiscovered = false;
+
     protected ?string $heading = 'Electricity Readings';
 
     protected int|string|array $columnSpan = 1;
+
+    public ?Model $record = null;
 
     protected function getFilters(): ?array
     {
@@ -27,38 +31,23 @@ class ElectricityReadingsChart extends ChartWidget
         $period = $this->filter ?? 'month';
         [$start, $end] = $this->resolveDateRange($period);
 
-        $properties = Property::query()
-            ->when(
-                ! auth()->user()?->hasRole('superadmin'),
-                fn ($query) => $query->whereHas('users', fn ($query) => $query->where('users.id', auth()->id()))
-            )
-            ->with([
-                'readings' => fn ($query) => $query
-                    ->where('type', 'electricity')
-                    ->whereBetween('reading_date', [$start, $end]),
-            ])
-            ->get();
+        $readings = MeterReading::query()
+            ->where('property_id', $this->record?->id)
+            ->where('type', 'electricity')
+            ->whereBetween('reading_date', [$start, $end])
+            ->orderBy('reading_date')
+            ->get(['reading_date', 'value']);
 
-        $labels = $properties->pluck('name')->toArray();
-
-        $data = $properties
-            ->map(function ($property): float {
-                $readings = $property->readings;
-
-                if ($readings->isEmpty()) {
-                    return 0.0;
-                }
-
-                return round((float) $readings->avg('value'), 2);
-            })
-            ->toArray();
+        $labels = $readings->map(fn ($r) => $r->reading_date->format('M d'))->toArray();
+        $data = $readings->map(fn ($r) => (float) $r->value)->toArray();
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Electricity (Average) kW',
+                    'label' => 'Electricity (kW)',
                     'data' => $data,
                     'backgroundColor' => '#f59e0b',
+                    'borderColor' => '#f59e0b',
                 ],
             ],
             'labels' => $labels,
