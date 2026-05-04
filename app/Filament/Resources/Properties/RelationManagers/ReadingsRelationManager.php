@@ -41,7 +41,7 @@ class ReadingsRelationManager extends RelationManager
                 Forms\Components\Select::make('gauge')
                     ->label('Gauge')
                     ->hint('Select which gauge this reading is for')
-                    ->options(function (Forms\Get $get, $livewire) {
+                    ->options(function (\Filament\Schemas\Components\Utilities\Get $get, $livewire) {
                         $type = $get('type');
                         $property = $livewire->getOwnerRecord();
 
