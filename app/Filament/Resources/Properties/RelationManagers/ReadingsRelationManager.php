@@ -7,7 +7,8 @@ use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables;
-use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 
 class ReadingsRelationManager extends RelationManager
@@ -37,34 +38,6 @@ class ReadingsRelationManager extends RelationManager
                 Forms\Components\DatePicker::make('reading_date')
                     ->required()
                     ->default(now()),
-                Forms\Components\Select::make('gauge')
-                    ->label('Gauge')
-                    ->hint('Select which gauge this reading is for')
-                    ->options(function (Forms\Get $get, $livewire) {
-                        $type = $get('type');
-                        $property = $livewire->getOwnerRecord();
-
-                        if (! $property || ! $type) {
-                            return [];
-                        }
-
-                        $numbers = $type === 'electricity'
-                            ? ($property->electricity_number ?? [])
-                            : ($property->water_number ?? []);
-
-                        if (! is_array($numbers)) {
-                            return [];
-                        }
-
-                        return collect($numbers)
-                            ->mapWithKeys(fn ($item) => [
-                                ($item['number'] ?? '') => ($item['number'] ?? ''),
-                            ])
-                            ->filter()
-                            ->all();
-                    })
-                    ->searchable()
-                    ->nullable(),
                 Forms\Components\Textarea::make('notes')
                     ->label('Report Issue')
                     ->hint('Optional: describe any issue with this reading')
@@ -93,9 +66,6 @@ class ReadingsRelationManager extends RelationManager
 
                         return number_format((float) $state, 2).$unit;
                     }),
-                Tables\Columns\TextColumn::make('gauge')
-                    ->label('Gauge')
-                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('reading_date')
                     ->date()
                     ->sortable(),
@@ -106,13 +76,32 @@ class ReadingsRelationManager extends RelationManager
                     ->tooltip(fn ($record) => $record->notes),
             ])
             ->filters([
-                SelectFilter::make('type')
-                    ->options([
-                        'electricity' => 'Electricity',
-                        'water' => 'Water',
+                Filter::make('type')
+                    ->form([
+                        Forms\Components\ToggleButtons::make('type')
+                            ->label('Type')
+                            ->options([
+                                'electricity' => 'Electricity',
+                                'water' => 'Water',
+                            ])
+                            ->colors([
+                                'electricity' => 'warning',
+                                'water' => 'primary',
+                            ])
+                            ->grouped(),
                     ])
-                    ->label('Type'),
+                    ->query(function ($query, array $data) {
+                        if (! empty($data['type'])) {
+                            $query->where('type', $data['type']);
+                        }
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        return ! empty($data['type'])
+                            ? 'Type: '.ucfirst($data['type'])
+                            : null;
+                    }),
             ])
+            ->filtersLayout(FiltersLayout::AboveContent)
             ->headerActions([
                 Actions\CreateAction::make()
                     ->label('New meter reading')
