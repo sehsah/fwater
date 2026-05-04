@@ -55,7 +55,7 @@ class WaterReadingsChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Water (Average) gallons',
+                    'label' => 'Water gallons',
                     'data' => $data,
                     'backgroundColor' => '#3b82f6',
                 ],

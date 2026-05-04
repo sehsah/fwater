@@ -38,6 +38,34 @@ class ReadingsRelationManager extends RelationManager
                 Forms\Components\DatePicker::make('reading_date')
                     ->required()
                     ->default(now()),
+                Forms\Components\Select::make('gauge')
+                    ->label('Gauge')
+                    ->hint('Select which gauge this reading is for')
+                    ->options(function (Forms\Get $get, $livewire) {
+                        $type = $get('type');
+                        $property = $livewire->getOwnerRecord();
+
+                        if (! $property || ! $type) {
+                            return [];
+                        }
+
+                        $numbers = $type === 'electricity'
+                            ? ($property->electricity_number ?? [])
+                            : ($property->water_number ?? []);
+
+                        if (! is_array($numbers)) {
+                            return [];
+                        }
+
+                        return collect($numbers)
+                            ->mapWithKeys(fn ($item) => [
+                                ($item['number'] ?? '') => ($item['number'] ?? ''),
+                            ])
+                            ->filter()
+                            ->all();
+                    })
+                    ->searchable()
+                    ->nullable(),
                 Forms\Components\Textarea::make('notes')
                     ->label('Report Issue')
                     ->hint('Optional: describe any issue with this reading')
@@ -66,6 +94,9 @@ class ReadingsRelationManager extends RelationManager
 
                         return number_format((float) $state, 2).$unit;
                     }),
+                Tables\Columns\TextColumn::make('gauge')
+                    ->label('Gauge')
+                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('reading_date')
                     ->date()
                     ->sortable(),

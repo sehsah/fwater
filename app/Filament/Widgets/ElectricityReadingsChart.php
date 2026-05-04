@@ -56,7 +56,7 @@ class ElectricityReadingsChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Electricity (Average) kW',
+                    'label' => 'Electricity kW',
                     'data' => $data,
                     'backgroundColor' => '#f59e0b',
                 ],

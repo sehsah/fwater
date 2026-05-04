@@ -22,8 +22,8 @@ class ViewProperty extends ViewRecord
     protected function getFooterWidgets(): array
     {
         return [
-            PropertyElectricityChart::make(['record' => $this->record]),
-            PropertyWaterChart::make(['record' => $this->record]),
+            PropertyElectricityChart::class,
+            PropertyWaterChart::class,
         ];
     }
 }
